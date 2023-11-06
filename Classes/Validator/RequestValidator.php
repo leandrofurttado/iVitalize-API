@@ -2,11 +2,42 @@
 
 namespace Validator;
 
+use Util\ConstantesGenericasUtil;
+use Util\JsonUtil;
 
 class RequestValidator
 {
-    public function __construct()
+    
+    private $request;
+    private $dadosRequest;
+
+    public function __construct($request)
     {
-        echo 'Testando API...';
+        $this->request = $request;
+
+    }
+
+
+    public function processarRequest()//irá separar as requests, detalhando e enviando para o seu lugar o que é post, o que é delete, o que é get
+    { 
+        $retorno = mb_convert_encoding(ConstantesGenericasUtil::MSG_ERRO_TIPO_ROTA, 'UTF-8', 'ISO-8859-1');
+
+        if (in_array($this->request['metodo'], ConstantesGenericasUtil::TIPO_REQUEST, true)){
+            $retorno = $this->direcionarRequest();
+        }
+
+        return $retorno;
+
+    }
+
+
+    private function direcionarRequest() //Agora aqui vai direcionar cada METODO para o seu lugar correto (PUT, POST, GET, DELETE)
+    {   
+
+        if ($this->request['metodo'] == 'POST'){
+            $this->dadosRequest = JsonUtil::tratarCorpoRequisicaoJson();
+            echo 'Olá mundo!';
+        }
+
     }
 }

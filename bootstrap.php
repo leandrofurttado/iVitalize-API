@@ -5,12 +5,13 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ERROR);
 
 define('HOST', 'localhost');
-define('BANCO', 'api_ivitalize');
+define('BANCO', 'ivitalize');
 define('USER', 'vitalize');
 define('SENHA', '123');
 
 define('DS', DIRECTORY_SEPARATOR);
-define('DIR_APP', '\xampp\htdocs\iVitalize-API');
+define('DIR_APP', __DIR__);
+define('DIR_PROJETO', 'iVitalize-API');
 
 if (file_exists('autoload.php')) {
     include 'autoload.php';
