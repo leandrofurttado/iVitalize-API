@@ -6,7 +6,7 @@ error_reporting(E_ERROR);
 
 define('HOST', 'localhost');
 define('BANCO', 'ivitalize');
-define('USER', 'vitalize');
+define('USUARIO', 'vitalize');
 define('SENHA', '123');
 
 define('DS', DIRECTORY_SEPARATOR);
