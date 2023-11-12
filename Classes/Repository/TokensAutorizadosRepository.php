@@ -4,7 +4,8 @@
 namespace Repository;
 
 use DB\MySQL;
-
+use InvalidArgumentException;
+use Util\ConstantesGenericasUtil;
 
 class TokensAutorizadosRepository
 {
@@ -22,13 +23,24 @@ class TokensAutorizadosRepository
     {
 
         $token = str_replace([' ', 'Bearer'], '', $token); //Substituir espaços e a palavra Bearer por vazio de $token
-        
+
         if($token){
+            $consultaTokenExiste = 'SELECT id FROM ' . self::TABELA . ' WHERE token = :token AND status = :status';
+            $stmt = $this->getMySQL()->getDb()->prepare($consultaTokenExiste);
+            $stmt->bindValue(':token', $token);
+            $stmt->bindValue(':status', 'S'); //SOMENTE OS ATIVOS (S)
+            $stmt->execute();
+
+            if($stmt->rowCount() !== 1){
+                header(http_response_code(401));
+                throw new InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_TOKEN_NAO_AUTORIZADO);
+            }
+
+            echo 'TOKEN AUTORIZADO';
 
         } else {
-
+            throw new  \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_TOKEN_NAO_AUTORIZADO);
         }
-        var_dump($token, 'TOKEN CHEGOU?');  // continuar o video a partir de 7:30
     }
 
     public function getMySQL()

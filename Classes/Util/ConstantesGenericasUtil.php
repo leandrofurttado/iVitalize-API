@@ -17,8 +17,7 @@ abstract class ConstantesGenericasUtil
     public const MSG_ERRO_GENERICO = 'Algum erro ocorreu na requisição!';
     public const MSG_ERRO_SEM_RETORNO = 'Nenhum registro encontrado!';
     public const MSG_ERRO_NAO_AFETADO = 'Nenhum registro afetado!';
-    public const MSG_ERRO_TOKEN_VAZIO = 'É necessário informar um Token!';
-    public const MSG_ERRO_TOKEN_NAO_AUTORIZADO = 'Token não autorizado!';
+    public const MSG_ERRO_TOKEN_NAO_AUTORIZADO = 'NÃO AUTORIZADO!';
     public const MSG_ERR0_JSON_VAZIO = 'O Corpo da requisição não pode ser vazio!';
 
     /* SUCESSO */

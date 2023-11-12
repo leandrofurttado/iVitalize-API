@@ -9,16 +9,17 @@ use Util\JsonUtil;
 class RequestValidator
 {
     
-    private string $request;
+    private $request;
     private array $dadosRequest;
     private object $TokensAutorizadosRepository;
 
-    public function __construct($request)
+    
+    public function __construct($request = [])
     {
-        $this->request = $request;
         $this->TokensAutorizadosRepository = new TokensAutorizadosRepository();
-
+        $this->request = $request;
     }
+
 
 
     public function processarRequest()//irá separar as requests, detalhando e enviando para o seu lugar o que é post, o que é delete, o que é get
@@ -41,7 +42,7 @@ class RequestValidator
             $this->dadosRequest = JsonUtil::tratarCorpoRequisicaoJson();
         }
 
-        $this->TokensAutorizadosRepository->validarToken(getallheaders()['Authorization']);
+        $this->TokensAutorizadosRepository->validarToken(getallheaders()['authorization']);
 
     }
 }

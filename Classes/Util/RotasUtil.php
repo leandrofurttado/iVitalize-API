@@ -9,18 +9,17 @@ class RotasUtil
     /*  //TRATAMENTO DAS ROTAS NA URL  //TRATAMENTO DAS ROTAS NA URL  //TRATAMENTO DAS ROTAS NA URL  //TRATAMENTO DAS ROTAS NA URL */
 
 
-    public static function get_rotas(){ /* ROTEADOR */
-
+    public static function getRotas()
+    {
         $urls = self::getUrls();
 
-        $request = array();
-        $request['rota'] = strtoupper($urls[0]); // PEGA A ROTA PRINCIPAL ex: (usuarios, cliente, perfil etc...)
+        $request = [];
+        $request['rota'] = strtoupper($urls[0]);
         $request['recurso'] = $urls[1] ?? null;
         $request['id'] = $urls[2] ?? null;
-
-        $request['metodo'] = $_SERVER['REQUEST_METHOD']; //pega o metodo da req (get, post, put , delete)
-
-
+        $request['metodo'] = $_SERVER['REQUEST_METHOD'];
+        
+        return $request;
     }
 
     public static function getUrls() { //usado para pegar as rotas passadas
