@@ -57,18 +57,14 @@ class UsuariosRepository
 
         if ($stmt->rowCount() > 0) {
             $user = $stmt->fetch(); // Obtém os dados do usuário encontrado
-            $hashedPasswordFromDB = $user['password']; // Senha hash armazenada no banco de dados
-
+            $hashedPassword = password_hash($password, PASSWORD_BCRYPT); // Senha hash armazenada no banco de dados
             // Verifica se a senha fornecida corresponde à senha do banco de dados
-            if (password_verify($password, $hashedPasswordFromDB)) {
-                // Senha correta, login bem-sucedido
-                return $stmt->rowCount(); // Retorna a quantidade de linhas afetadas
+            if (password_verify($password, $hashedPassword)) {
+                return ['id' => $user['id']]; // Retorna o Id
             } else {
-                // Senha incorreta
                 return 0; // Se a senha estiver incorreta, retorna 0
             }
         } else {
-            // Nenhum usuário encontrado com o e-mail fornecido
             return 0; // Retorna 0 se nenhum usuário for encontrado
         }
     }

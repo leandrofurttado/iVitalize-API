@@ -60,14 +60,16 @@ class UsuariosService
         $recurso = $this->dados['recurso'];
 
 
-        if (in_array($recurso, self::RECURSOS_POST, true)) {
+        if (in_array($recurso, self::RECURSOS_POST, true)) { // **** SE FOR CADASTRO ELE ENTRA AQUI
             $retorno = $this->CadastrarUsuario(); // (CADASTRAR)
-        } elseif (in_array($recurso, self::RECURSOS_ATUALIZAR, true)) {
+        } elseif (in_array($recurso, self::RECURSOS_ATUALIZAR, true)) { // *** SE FOR UPDATE ELE ENTRA AQUI
             if ($this->dados['id'] > 0) {
                 $retorno = $this->AtualizarUsuario();
             } else {
                 throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_ID_OBRIGATORIO);
             }
+        } elseif (in_array($recurso, self::RECURSOS_LOGIN, true)) { // *** SE FOR UPDATE ELE ENTRA AQUI
+            $retorno = $this->LoginUsuario();
         } else {
             throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_RECURSO_INEXISTENTE);
         }
@@ -119,17 +121,8 @@ class UsuariosService
         $password = $this->dadosCorpoRequest['password'];
         $email = $this->dadosCorpoRequest['email'];
 
-
         if ($email && $password) {
-            if ($this->UsuariosRepository->loginUser($email, $password)) {
-                try {
-                    $idCadastrado = $this->UsuariosRepository->getMySQL()->getDb()->lastInsertId();
-                    $this->UsuariosRepository->getMySQL()->getDb()->commit();
-                    return ['id_cadastrado' => $idCadastrado];
-                } catch (\PDOException $e) {
-                    throw new \InvalidArgumentException('Erro no banco de dados ao cadastrar: ' . $e->getMessage());
-                }
-            }
+            return $this->UsuariosRepository->loginUser($email, $password);
         }
 
         throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_LOGIN_SENHA_OBRIGATORIO); //ERRO CASO NAO TIVER PREENCHIDO OS CAMPOS
