@@ -12,6 +12,7 @@ class UsuariosService
     public const RECURSOS_GET = ['listar', 'consultar'];
     public const RECURSOS_POST = ['cadastrar'];
     public const RECURSOS_ATUALIZAR = ['atualizar'];
+    public const RECURSOS_LOGIN = ['login'];
     private array $dados;
     private array $dadosCorpoRequest;
     private object $UsuariosRepository;
@@ -100,6 +101,27 @@ class UsuariosService
         if ($username && $password && $nivel_auth && $email) {
             if ($this->UsuariosRepository->insertUser($username, $password, $email, $nivel_auth)) {
 
+                try {
+                    $idCadastrado = $this->UsuariosRepository->getMySQL()->getDb()->lastInsertId();
+                    $this->UsuariosRepository->getMySQL()->getDb()->commit();
+                    return ['id_cadastrado' => $idCadastrado];
+                } catch (\PDOException $e) {
+                    throw new \InvalidArgumentException('Erro no banco de dados ao cadastrar: ' . $e->getMessage());
+                }
+            }
+        }
+
+        throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_LOGIN_SENHA_OBRIGATORIO); //ERRO CASO NAO TIVER PREENCHIDO OS CAMPOS
+    }
+
+    private function LoginUsuario()
+    {
+        $password = $this->dadosCorpoRequest['password'];
+        $email = $this->dadosCorpoRequest['email'];
+
+
+        if ($email && $password) {
+            if ($this->UsuariosRepository->loginUser($email, $password)) {
                 try {
                     $idCadastrado = $this->UsuariosRepository->getMySQL()->getDb()->lastInsertId();
                     $this->UsuariosRepository->getMySQL()->getDb()->commit();
