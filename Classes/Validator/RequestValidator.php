@@ -11,7 +11,7 @@ class RequestValidator
 {
     
     private $request;
-    private array $dadosRequest;
+    private array $dadosRequest = [];
     private object $TokensAutorizadosRepository;
 
     
@@ -66,6 +66,25 @@ class RequestValidator
                 case 'USUARIOS': //ROTA /usuarios
                     $UsuariosService = new UsuariosService($this->request);
                     $retorno = $UsuariosService->validarGet();
+                    break;
+                default:
+                    throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_RECURSO_INEXISTENTE);
+            }
+        }
+        return $retorno;
+    }
+
+    private function post()
+    {   
+        $retorno = mb_convert_encoding(ConstantesGenericasUtil::MSG_ERRO_TIPO_ROTA, 'UTF-8', 'ISO-8859-1');
+
+
+        if (in_array($this->request['rota'], ConstantesGenericasUtil::TIPO_POST, true)) {
+            switch ($this->request['rota']) {
+                case 'USUARIOS': //ROTA /usuarios
+                    $UsuariosService = new UsuariosService($this->request);
+                    $UsuariosService->tratarDadosRequestPost($this->dadosRequest);
+                    $retorno = $UsuariosService->validarPost();
                     break;
                 default:
                     throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_RECURSO_INEXISTENTE);
