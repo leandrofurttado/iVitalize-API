@@ -80,7 +80,7 @@ class MySQL
      * @param $id
      * @return mixed
      */
-    public function getOneByKey($tabela, $id)
+    public function getItemPorId($tabela, $id)
     {
         if ($tabela && $id) {
             $consulta = 'SELECT * FROM ' . $tabela . ' WHERE id = :id';

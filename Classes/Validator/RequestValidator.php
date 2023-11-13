@@ -3,6 +3,7 @@
 namespace Validator;
 
 use Repository\TokensAutorizadosRepository;
+use Service\UsuariosService;
 use Util\ConstantesGenericasUtil;
 use Util\JsonUtil;
 
@@ -42,7 +43,35 @@ class RequestValidator
             $this->dadosRequest = JsonUtil::tratarCorpoRequisicaoJson();
         }
 
+        if ($this->request['metodo'] == 'PUT'){
+            $this->dadosRequest = JsonUtil::tratarCorpoRequisicaoJson();
+        }
+
         $this->TokensAutorizadosRepository->validarToken(getallheaders()['authorization']);
 
+        $metodo = $this->request['metodo'];
+
+
+        return $this->$metodo(); //aqui é o mesmo que $this->get(); ou $this->post(); pq ele pega o request e transforma em function.
+
     }
+    
+    private function get()
+    {   
+        $retorno = mb_convert_encoding(ConstantesGenericasUtil::MSG_ERRO_TIPO_ROTA, 'UTF-8', 'ISO-8859-1');
+
+
+        if (in_array($this->request['rota'], ConstantesGenericasUtil::TIPO_GET, true)) {
+            switch ($this->request['rota']) {
+                case 'USUARIOS': //ROTA /usuarios
+                    $UsuariosService = new UsuariosService($this->request);
+                    $retorno = $UsuariosService->validarGet();
+                    break;
+                default:
+                    throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_RECURSO_INEXISTENTE);
+            }
+        }
+        return $retorno;
+    }
+
 }

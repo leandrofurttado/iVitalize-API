@@ -36,8 +36,6 @@ class TokensAutorizadosRepository
                 throw new InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_TOKEN_NAO_AUTORIZADO);
             }
 
-            echo 'TOKEN AUTORIZADO';
-
         } else {
             throw new  \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_TOKEN_NAO_AUTORIZADO);
         }
