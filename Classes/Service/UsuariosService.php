@@ -11,6 +11,7 @@ class UsuariosService
     public const TABELA = 'usuarios';
     public const RECURSOS_GET = ['listar', 'consultar'];
     public const RECURSOS_POST = ['cadastrar'];
+    public const RECURSOS_ATUALIZAR = ['atualizar'];
     private array $dados;
     private array $dadosCorpoRequest;
     private object $UsuariosRepository;
@@ -60,6 +61,12 @@ class UsuariosService
 
         if (in_array($recurso, self::RECURSOS_POST, true)) {
             $retorno = $this->CadastrarUsuario(); // (CADASTRAR)
+        } elseif (in_array($recurso, self::RECURSOS_ATUALIZAR, true)) {
+            if ($this->dados['id'] > 0) {
+                $retorno = $this->AtualizarUsuario();
+            } else {
+                throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_ID_OBRIGATORIO);
+            }
         } else {
             throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_RECURSO_INEXISTENTE);
         }
@@ -71,18 +78,18 @@ class UsuariosService
         return $retorno;
     }
 
-    public function buscarUsuarioId()
+    private function buscarUsuarioId()
     {
         return $this->UsuariosRepository->getMySQL()->getItemPorId(self::TABELA, $this->dados['id']);
     }
 
-    public function ListarTodosUsuarios()
+    private function ListarTodosUsuarios()
     {
         return $this->UsuariosRepository->getMySQL()->getAll(self::TABELA);
     }
 
 
-    public function CadastrarUsuario()
+    private function CadastrarUsuario()
     {
         $username = $this->dadosCorpoRequest['username'];
         $password = $this->dadosCorpoRequest['password'];
@@ -91,7 +98,7 @@ class UsuariosService
 
 
         if ($username && $password && $nivel_auth && $email) {
-            if ($this->UsuariosRepository->insertUser($username, $password, $email, $nivel_auth)) {   
+            if ($this->UsuariosRepository->insertUser($username, $password, $email, $nivel_auth)) {
 
                 try {
                     $idCadastrado = $this->UsuariosRepository->getMySQL()->getDb()->lastInsertId();
@@ -99,10 +106,27 @@ class UsuariosService
                     return ['id_cadastrado' => $idCadastrado];
                 } catch (\PDOException $e) {
                     throw new \InvalidArgumentException('Erro no banco de dados ao cadastrar: ' . $e->getMessage());
-                }     
+                }
             }
         }
 
         throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_LOGIN_SENHA_OBRIGATORIO); //ERRO CASO NAO TIVER PREENCHIDO OS CAMPOS
+    }
+
+    private function AtualizarUsuario()
+    {
+        if ($this->UsuariosRepository->updateUser($this->dados['id'], $this->dadosCorpoRequest) > 0) {
+
+            try {
+                $this->UsuariosRepository->getMySQL()->getDb()->commit();
+                return ConstantesGenericasUtil::MSG_ATUALIZADO_SUCESSO;
+            } catch (\PDOException $e) {
+                throw new \InvalidArgumentException('Erro no banco de dados ao atualizar: ' . $e->getMessage());
+            }
+        }
+
+
+        $this->UsuariosRepository->getMySQL()->getDb()->rollback();
+        throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_NAO_AFETADO);
     }
 }

@@ -41,10 +41,7 @@ class RequestValidator
 
         if ($this->request['metodo'] == 'POST'){
             $this->dadosRequest = JsonUtil::tratarCorpoRequisicaoJson();
-        }
 
-        if ($this->request['metodo'] == 'PUT'){
-            $this->dadosRequest = JsonUtil::tratarCorpoRequisicaoJson();
         }
 
         $this->TokensAutorizadosRepository->validarToken(getallheaders()['authorization']);
