@@ -99,9 +99,12 @@ class UsuariosService
         $email = $this->dadosCorpoRequest['email'];
         $nivel_auth = $this->dadosCorpoRequest['nivel_auth'];
 
+        //hashando a senha:
+        $passwordHash = password_hash($password, PASSWORD_DEFAULT);
+
 
         if ($username && $password && $nivel_auth && $email) {
-            if ($this->UsuariosRepository->insertUser($username, $password, $email, $nivel_auth)) {
+            if ($this->UsuariosRepository->insertUser($username, $passwordHash, $email, $nivel_auth)) {
 
                 try {
                     $idCadastrado = $this->UsuariosRepository->getMySQL()->getDb()->lastInsertId();
