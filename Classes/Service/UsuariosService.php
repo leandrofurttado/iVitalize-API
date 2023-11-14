@@ -13,6 +13,7 @@ class UsuariosService
     public const RECURSOS_POST = ['cadastrar'];
     public const RECURSOS_ATUALIZAR = ['atualizar'];
     public const RECURSOS_LOGIN = ['login'];
+    public const RECURSOS_BUSCARDADOS = ['buscardados', 'BuscarDados'];
     private array $dados;
     private array $dadosCorpoRequest;
     private object $UsuariosRepository;
@@ -68,8 +69,11 @@ class UsuariosService
             } else {
                 throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_ID_OBRIGATORIO);
             }
-        } elseif (in_array($recurso, self::RECURSOS_LOGIN, true)) { // *** SE FOR UPDATE ELE ENTRA AQUI
+        } elseif (in_array($recurso, self::RECURSOS_LOGIN, true)) {
             $retorno = $this->LoginUsuario();
+        }
+        elseif (in_array($recurso, self::RECURSOS_BUSCARDADOS, true)) {
+            $retorno = $this->BuscarDadosUsuario();
         } else {
             throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_RECURSO_INEXISTENTE);
         }
@@ -146,5 +150,16 @@ class UsuariosService
 
         $this->UsuariosRepository->getMySQL()->getDb()->rollback();
         throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_NAO_AFETADO);
+    }
+
+    private function BuscarDadosUsuario()
+    {
+        $idUser = $this->dados['id'];
+
+        if ($idUser) {
+            return $this->UsuariosRepository->buscarDadosUser($idUser);
+        }
+
+        throw new \InvalidArgumentException("ID é obrigatório, verifique novamente!"); //ERRO CASO NAO TIVER PREENCHIDO OS CAMPOS
     }
 }

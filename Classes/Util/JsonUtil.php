@@ -16,18 +16,18 @@ class JsonUtil
         $dados = [];
         $dados[ConstantesGenericasUtil::TIPO] = ConstantesGenericasUtil::TIPO_ERRO;
 
-
-        if ($retorno["erro"]) {
+        if (is_array($retorno) && isset($retorno["erro"])) {
             header(http_response_code(400));
             $dados[ConstantesGenericasUtil::TIPO] = ConstantesGenericasUtil::TIPO_ERRO;
             $dados[ConstantesGenericasUtil::RESPOSTA] = $retorno["erro"];
-        } else if ((is_array($retorno) && count($retorno) > 0) || strlen($retorno) > 10) {
+        } else if ((is_array($retorno) && count($retorno) > 0) || (is_string($retorno) && strlen($retorno) > 10)) {
             $dados[ConstantesGenericasUtil::TIPO] = ConstantesGenericasUtil::TIPO_SUCESSO;
             $dados[ConstantesGenericasUtil::RESPOSTA] = $retorno;
         }
 
         $this->retornarJson($dados);
     }
+
 
     /**
      * @param $json

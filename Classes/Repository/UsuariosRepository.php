@@ -5,6 +5,7 @@ namespace Repository;
 
 use DB\MySQL;
 use PDO;
+use Util\ConstantesGenericasUtil;
 
 class UsuariosRepository
 {
@@ -46,6 +47,36 @@ class UsuariosRepository
         $stmt->execute();
 
         return $stmt->rowCount(); // retorna a quantidade de linhas afetadas , ou seja se afeto 1 linha é por que deu certo
+    }
+
+    public function buscarDadosUser($id)
+    {
+        if ($id) {
+            $query = 'SELECT nome_completo, username, email, nivel_auth, data_nascimento, cpf, cep, endereco, ctps FROM ' . self::TABELA . ' WHERE id = :id';
+
+            $stmt = $this->MySQL->getDb()->prepare($query);
+
+            $stmt->bindParam(':id', $id);
+            $stmt->execute();
+            $totalRegistros = $stmt->rowCount();
+            $user = $stmt->fetch();
+
+            if ($totalRegistros === 1) {
+                return [
+                    'nome_completo' => $user['nome_completo'],
+                    'username' => $user['username'],
+                    'email' => $user['email'],
+                    'nivel_auth' => $user['nivel_auth'],
+                    'data_nascimento' => $user['data_nascimento'],
+                    'cpf' => $user['cpf'],
+                    'cep' => $user['cep'],
+                    'endereco' => $user['endereco'],
+                    'ctps' => $user['ctps']
+                ];
+            }
+            throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_SEM_RETORNO);
+        }
+        throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_ID_OBRIGATORIO);
     }
 
     public function loginUser($email, $password)
