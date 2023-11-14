@@ -81,7 +81,7 @@ class UsuariosRepository
 
     public function loginUser($email, $password)
     {
-        $query = 'SELECT id, password FROM ' . self::TABELA . ' WHERE email = :email';
+        $query = 'SELECT id, nome_completo, username, email, nivel_auth, data_nascimento, cpf, cep, endereco, ctps, password FROM ' . self::TABELA . ' WHERE email = :email';
         $stmt = $this->MySQL->getDb()->prepare($query);
         $stmt->bindParam(':email', $email);
         $stmt->execute();
@@ -90,7 +90,18 @@ class UsuariosRepository
             $user = $stmt->fetch();
             // Verifica se a senha fornecida corresponde à senha do banco de dados
             if (password_verify($password, $user['password'])) {
-                return ['id' => $user['id']]; // Retorna o Id
+                return [
+                    'id' => $user['id'],
+                    'nome_completo' => $user['nome_completo'],
+                    'username' => $user['username'],
+                    'email' => $user['email'],
+                    'nivel_auth' => $user['nivel_auth'],
+                    'data_nascimento' => $user['data_nascimento'],
+                    'cpf' => $user['cpf'],
+                    'cep' => $user['cep'],
+                    'endereco' => $user['endereco'],
+                    'ctps' => $user['ctps']
+                ]; // Retorna o Id
             } else {
                 return ['erro' => "Usuário ou senha inválidos!"]; // Se a senha estiver incorreta, retorna 0
             }
