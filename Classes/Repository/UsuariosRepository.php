@@ -50,24 +50,25 @@ class UsuariosRepository
 
     public function loginUser($email, $password)
     {
-        $query = 'SELECT id, password FROM ' . self::TABELA . ' WHERE email = :email';
+        $query = 'SELECT id, password FROM ' . self::TABELA . ' WHERE email = :email AND password = :password';
         $stmt = $this->MySQL->getDb()->prepare($query);
         $stmt->bindParam(':email', $email);
+        $stmt->bindParam(':password', $password);
         $stmt->execute();
 
         if ($stmt->rowCount() > 0) {
-            $user = $stmt->fetch(); // Obtém os dados do usuário encontrado
-            $hashedPassword = password_hash($password, PASSWORD_BCRYPT); // Senha hash armazenada no banco de dados
+            $user = $stmt->fetch();
             // Verifica se a senha fornecida corresponde à senha do banco de dados
-            if (password_verify($password, $hashedPassword)) {
+            if ($user['id']) {
                 return ['id' => $user['id']]; // Retorna o Id
             } else {
-                return 0; // Se a senha estiver incorreta, retorna 0
+                return ['erro' => "Usuário ou senha inválidos!"]; // Se a senha estiver incorreta, retorna 0
             }
         } else {
-            return 0; // Retorna 0 se nenhum usuário for encontrado
+            return ['erro' => "Usuário ou senha inválidos!"]; // Retorna 0 se nenhum usuário for encontrado
         }
     }
+
 
     public function getMySQL()
     {
