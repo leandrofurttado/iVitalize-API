@@ -19,17 +19,19 @@ class UsuariosRepository
         $this->MySQL = new MySQL();
     }
 
-    public function insertUser($username, $password, $email, $nivel_auth)
+    public function insertUser($nome_completo, $username, $password, $email, $data_nascimento, $sexo)
     {
-        $query = 'INSERT INTO ' . self::TABELA . '(username, password, email, nivel_auth) VALUES (:username, :password,:email, :nivel_auth)';
+        $query = 'INSERT INTO ' . self::TABELA . '(nome_completo, usuario, senha, email, data_nascimento, sexo) VALUES (:nome_completo, :usuario,:senha, :email, :data_nascimento, :sexo)';
 
         $this->MySQL->getDb()->beginTransaction();
         $stmt = $this->MySQL->getDb()->prepare($query);
 
-        $stmt->bindParam(':username', $username);
-        $stmt->bindParam(':password', $password);
+        $stmt->bindParam(':nome_completo', $nome_completo);
+        $stmt->bindParam(':usuario', $username);
+        $stmt->bindParam(':senha', $password);
         $stmt->bindParam(':email', $email);
-        $stmt->bindParam(':nivel_auth', $nivel_auth);
+        $stmt->bindParam(':data_nascimento', $data_nascimento);
+        $stmt->bindParam(':sexo', $sexo);
         $stmt->execute();
 
         return $stmt->rowCount(); // retorna a quantidade de linhas afetadas , ou seja se afeto 1 linha é por que deu certo

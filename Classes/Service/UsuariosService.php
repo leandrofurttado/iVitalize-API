@@ -97,18 +97,20 @@ class UsuariosService
 
 
     private function CadastrarUsuario()
-    {
-        $username = $this->dadosCorpoRequest['username'];
-        $password = $this->dadosCorpoRequest['password'];
+    {   
+        $nome_completo = $this->dadosCorpoRequest['nome_completo'];
+        $username = $this->dadosCorpoRequest['usuario'];
+        $password = $this->dadosCorpoRequest['senha'];
         $email = $this->dadosCorpoRequest['email'];
-        $nivel_auth = $this->dadosCorpoRequest['nivel_auth'];
+        $sexo = $this->dadosCorpoRequest['sexo'];
+        $data_nascimento = $this->dadosCorpoRequest['data_nascimento'];
 
         //hashando a senha:
         $passwordHash = password_hash($password, PASSWORD_DEFAULT);
 
 
-        if ($username && $password && $nivel_auth && $email) {
-            if ($this->UsuariosRepository->insertUser($username, $passwordHash, $email, $nivel_auth)) {
+        if ($username && $password && $data_nascimento && $email) {
+            if ($this->UsuariosRepository->insertUser($nome_completo, $username, $passwordHash, $email, $data_nascimento, $sexo)) {
 
                 try {
                     $idCadastrado = $this->UsuariosRepository->getMySQL()->getDb()->lastInsertId();

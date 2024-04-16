@@ -5,9 +5,9 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ERROR);
 
 define('HOST', 'localhost');
-define('BANCO', 'id21520955_ivitalize');
-define('USUARIO', 'id21520955_ivitalize_bd');
-define('SENHA', 'iVitalize55@');
+define('BANCO', 'id22021468_geniuz1');
+define('USUARIO', 'id22021468_geniuzhm');
+define('SENHA', 'Geniuz@157');
 
 define('DS', DIRECTORY_SEPARATOR);
 define('DIR_APP', __DIR__);
