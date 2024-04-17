@@ -12,7 +12,7 @@ define('PORTA', '51917');
 
 define('DS', DIRECTORY_SEPARATOR);
 define('DIR_APP', __DIR__);
-define('DIR_PROJETO', 'iVitalize-API');
+define('DIR_PROJETO', 'leandrofurttado/iVitalize-API');
 
 if (file_exists('autoload.php')) {
     include 'autoload.php';
