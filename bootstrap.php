@@ -8,6 +8,7 @@ define('HOST', 'roundhouse.proxy.rlwy.net');
 define('BANCO', 'railway');
 define('USUARIO', 'root');
 define('SENHA', 'CPfjaklpSHnNmAUOvBbomhHHqKSzmfSJ');
+define('PORTA', '51917');
 
 define('DS', DIRECTORY_SEPARATOR);
 define('DIR_APP', __DIR__);

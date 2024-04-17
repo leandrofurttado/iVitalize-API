@@ -26,7 +26,7 @@ class MySQL
     {
         try {
             return new PDO(
-                'mysql:host=' . HOST . '; dbname=' . BANCO . ';',
+                'mysql:host=' . HOST . ';port=' . PORTA . ';dbname=' . BANCO,
                 USUARIO,
                 SENHA
             );
